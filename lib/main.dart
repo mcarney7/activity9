@@ -1,10 +1,20 @@
+/*
+ * File: main.dart
+ * Project: Flutter SQLite Database App
+ * Description: Main entry point of the app, setting up the layout and button functions
+ * for database operations (insert, query, update, delete, query by ID, delete all).
+ * Author: MiKayla Carney
+ * Date: 10.14.2024
+ */
+
 import 'package:flutter/material.dart';
 import 'database_helper.dart';
 
-// Initialize the database helper
+// Initialize the database helper instance
 final dbHelper = DatabaseHelper();
 
 Future<void> main() async {
+  // Ensure widget binding and database initialization before app launch
   WidgetsFlutterBinding.ensureInitialized();
   await dbHelper.init();
   runApp(const MyApp());
@@ -28,7 +38,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
-  // Main UI layout
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +69,7 @@ class MyHomePage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             ElevatedButton(
-              onPressed: () => _queryById(1), // Change ID as needed
+              onPressed: () => _queryById(1), // Modify ID as needed
               child: const Text('Query by ID'),
             ),
             const SizedBox(height: 10),
@@ -74,7 +83,7 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  // Insert function
+  // Inserts a new row with a name and age into the database
   void _insert() async {
     Map<String, dynamic> row = {
       DatabaseHelper.columnName: 'Bob',
@@ -84,7 +93,7 @@ class MyHomePage extends StatelessWidget {
     debugPrint('Inserted row id: $id');
   }
 
-  // Query all rows function
+  // Queries all rows in the database and prints them
   void _query() async {
     final allRows = await dbHelper.queryAllRows();
     debugPrint('Query all rows:');
@@ -93,7 +102,7 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
-  // Update function
+  // Updates a specific row by ID with new name and age
   void _update() async {
     Map<String, dynamic> row = {
       DatabaseHelper.columnId: 1, // Change ID as needed
@@ -104,14 +113,14 @@ class MyHomePage extends StatelessWidget {
     debugPrint('Updated $rowsAffected row(s)');
   }
 
-  // Delete function
+  // Deletes the last row in the database by ID
   void _delete() async {
     final id = await dbHelper.queryRowCount();
     final rowsDeleted = await dbHelper.delete(id);
     debugPrint('Deleted $rowsDeleted row(s): row $id');
   }
 
-  // Query by ID function
+  // Queries a row by ID and prints the result
   void _queryById(int id) async {
     final row = await dbHelper.queryById(id);
     if (row != null) {
@@ -121,7 +130,7 @@ class MyHomePage extends StatelessWidget {
     }
   }
 
-  // Delete all function
+  // Deletes all records from the database table
   void _deleteAll() async {
     final rowsDeleted = await dbHelper.deleteAll();
     debugPrint('Deleted all $rowsDeleted row(s)');
